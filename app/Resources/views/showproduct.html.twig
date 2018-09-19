@@ -1,0 +1,57 @@
+<style>
+    a{ text-decoration: none;}
+    tr th{
+        background-color: #ddd;
+    }
+    tr:nth-child(odd){
+        background-color:white;
+    }tr:nth-child(even){
+        background-color:#ddd;
+     }
+    tr td{
+        text-align: center;
+    }
+</style>
+<a href="new">Add Product</a>
+<table id="products" style="width: 50%;">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Created_at</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pro in product %}
+        <tr>
+            <td>{{ pro.id }}</td>
+            <td>{{ pro.name }}</td>
+            <td>{{ pro.created|date("m/d/Y H:i") }}</td>
+            <td>
+                <a href="edit/{{ pro.id }}" class="edit-product">Edit</a>
+                <a href="#" id="{{ pro.id }}" class="delete-product">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% block javascripts %}
+<script>
+    const products = document.getElementById('products');
+    if (products) {
+        products.addEventListener('click', function (e) {
+            if(e.target.className === 'delete-product'){
+                if(confirm('Are you sure?')){
+                    const id = e.target.getAttribute('id');
+                    fetch(`delete/${id}`,{
+                        method: 'DELETE'
+                    }).then(function () {
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
